@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body>
+    <%- include('./partials/loader'); -%>
+    <div id="main-wrapper">
+        <%- include('./partials/header-sidebar'); -%>
+        <div class="content-body">
+            <div class="container-fluid" style="display: flex;flex-direction: row-reverse;justify-content: start;">
+                <div class="card col-xl-6 col-xxl-6 col-lg-6 col-sm-6" style="height: 150px;">
+                    <div class="card-header">   
+                        <h4 class="card-title">Tìm kiếm sản phẩm</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="basic-form">
+                            <div  id="form-id" method="get">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" value=<%= masp %>>
+                                    <div class="input-group-append">
+                                        <button href="" class="btn btn-primary" type="button">Nhập mã sản phẩm</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-xxl-6 col-lg-6 col-sm-6">
+                    <div class="card mb-3">
+                        <img class="card-img-top img-fluid" src="<%= product.IMAGEURL.trim() %>" alt="Card image cap">
+                        <div class="card-header" style="justify-content: space-between;flex-direction: column;">
+                            <h5 class="card-title truncate">Tên sản phẩm : <%= product.TENSP %></h5>
+                            <h5 class="card-title truncate"><span style="color: red;display: block;">Mã sản phẩm : <%= product.MASP %></span></h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text truncate">Nhà sản xuất : <%= product.TENTHUONGHIEU %></p>
+                            <p class="card-text text-dark">Giá bán: <span style="color: red;"><%= formatNumber(product.GIABAN) %> vnđ</span></p>
+                            <p class="card-text text-dark">Loại sản phẩm : <span style="font-weight: 600;"><%= product.TENLOAI %></span></p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+    
+    
+    </div>
+    
+    <%- include('./partials/script'); -%>
+    <script>
+        document.addEventListener('DOMContentLoaded',()=>{
+            const btnEl=document.querySelector('.btn-primary')
+            const inputEl=document.querySelector('input[type="text"]')
+
+            inputEl.addEventListener('keypress',(e)=>{
+                if(e.keyCode==13){
+                    btnEl.click()
+                }
+            })
+            btnEl.addEventListener('click',(e)=>{
+                console.log(inputEl.value )
+                window.location.href='/product/detail/'+inputEl.value 
+            })
+        })
+    </script>
+</body>
+
+</html>

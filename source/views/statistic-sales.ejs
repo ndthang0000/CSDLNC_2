@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body>
+
+    <%- include('./partials/loader'); -%>
+    <div id="main-wrapper">
+        <%- include('./partials/header-sidebar'); -%>
+        <div class="content-body">
+            <div class="container-fluid">
+                <div class="row page-titles mx-0">
+                    <div class="col-sm-6">
+                        <div class="welcome-text">
+                            <h4>Thống kê doanh thu</h4>
+                        </div>
+                    </div>
+                    <div class="basic-dropdown col-sm-4">
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                Chọn năm
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="">Tất cả</a>
+                                <a class="dropdown-item" href="?year=2022">Năm 2022</a>
+                                <a class="dropdown-item" href="?year=2021">Năm 2021</a>
+                                <a class="dropdown-item" href="?year=2020">Năm 2020</a>
+                                <a class="dropdown-item" href="?year=2019">Năm 2019</a>
+                                <a class="dropdown-item" href="?year=2018">Năm 2018</a>
+                                <a class="dropdown-item" href="?year=2017">Năm 2017</a>
+                                <a class="dropdown-item" href="?year=2016">Năm 2016</a>
+                                <a class="dropdown-item" href="?year=2015">Năm 2015</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="">Statistic</a></li>
+                            <li class="breadcrumb-item active"><a href="">Sales</a></li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 style="color: blue;"><%= year %></h3>
+                            </div>
+                            <div class="card-body">
+                                <div id="flotBar1" class="flot-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    
+    
+    </div>
+    
+    <%- include('./partials/script'); -%>
+    <script>
+        function formatNumber (n) {
+            return n.toFixed(0).replace(/./g, function (c, i, a) {
+                return i > 0 && c !== '.' && (a.length - i) % 3 === 0 ? ',' + c : c
+            })
+        }
+        var month =<%- JSON.stringify(data) -%>;        
+        console.log(month)
+        let maxValue=month[0]
+        for(let i=1;i<month.length;i++){
+            if(month[i]>maxValue)
+                maxValue=month[i]
+        }
+        document.addEventListener('DOMContentLoaded',()=>{
+            var data = {
+                labels: [
+                    'Jan: '+formatNumber(month[0]),
+                    'Feb: '+formatNumber(month[1]), 
+                    'March: '+formatNumber(month[2]), 
+                    'April: '+formatNumber(month[3]), 
+                    'May: '+formatNumber(month[4]), 
+                    'June: '+formatNumber(month[5]), 
+                    'Junely: '+formatNumber(month[6]), 
+                    'Aug: '+formatNumber(month[7]), 
+                    'Sept: '+formatNumber(month[8]), 
+                    'Oct: '+formatNumber(month[9]),
+                    'Nov: '+formatNumber(month[10]),
+                    'Dec: '+formatNumber(month[11])],
+                series: [
+                    month
+                ]
+                };
+                
+                var options = {
+                high: maxValue,
+                low: 0,
+                };
+                
+                new Chartist.Bar('.flot-chart', data, options);
+        })
+    </script>
+</body>
+
+</html>

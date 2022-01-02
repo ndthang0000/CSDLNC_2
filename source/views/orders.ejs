@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+
+<body>
+
+    <%- include('./partials/loader'); -%>
+    <div id="main-wrapper">
+        <%- include('./partials/header-sidebar'); -%>
+        <div class="content-body">
+            <div class="container-fluid">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="year-calendar"></div>
+                        </div>
+                    </div>
+                    <!-- /# card -->
+                </div>
+                <!-- row -->
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Đơn đặt hàng mới 
+                                    <% if(date){ %>
+                                    vào ngày <%= date %>
+                                    <% } else { %>
+                                        gần đây
+                                    <% } %></h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-responsive-sm" style="color: #6262d8;">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Mã Đơn hàng</th>
+                                                <th>Tên Khách Hàng</th>
+                                                <th>Status</th>
+                                                <th>Ngày đặt</th>
+                                                <th>Phí vận chuyển</th>
+                                                <th>Tổng tiền</th>
+                                                <th>Số điện thoại</th>
+                                                <th>Địa chỉ</th>
+                                                <th>Xử lí</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% allOrder.forEach((item,index)=>{ %>
+                                                <tr>
+                                                    <td><%= index+1 %></td>
+                                                    <td><%= item.MADH %></td>
+                                                    <td><%= item.HOTEN %></td>
+                                                    <td><% if(!item.TRANGTHAI) {%>
+                                                        <span class="badge badge-danger">Chờ xử lí</span>
+                                                        <% } else { %>
+                                                            <span class="badge badge-success">Đã hoàn tất</span>
+                                                        <% } %>
+                                                    </td>
+                                                    <td><%= formatDate(item.NGAYLAP) %></td>
+                                                    <td><%= formatNumber(item.PHIVANCHUYEN) %> đ</td>
+                                                    <td><%= formatNumber(item.TONGTIEN) %> đ</td>
+                                                    <td><%= item.SDT %></td>
+                                                    <td><%= item.DIACHI %></td>
+                                                    <td>
+                                                        <% if(!item.TRANGTHAI) { %>
+                                                            <button type="button" class="btn btn-rounded btn-primary btn-handle" data-madh=<%= item.MADH%> >
+                                                                <span class="btn-icon-left text-primary"><i class="fa fa-shopping-cart"></i>
+                                                                </span>Xác nhận đơn</button>
+                                                        <% }%>
+                                                        
+                                                    </td>
+                                                </tr>
+                                            <% }) %>
+                                            
+                                        </tbody>
+                                    </table>
+                                    <% if(allOrder.length===0){ %>
+                                        <h2 style="text-align: center;">Không có đơn đặt hàng nào
+                                            <% if(date){ %>
+                                                vào ngày <%= date %>
+                                            <% } else { %>
+                                                gần đây
+                                            <% } %>
+                                            </h2>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <%- include('./partials/script'); -%>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded',()=>{
+            const dateEl=document.querySelectorAll('.pignose-calendar-unit.pignose-calendar-unit-date')
+            const btnHandle=document.querySelectorAll('.btn-handle')
+            
+
+            dateEl.forEach(item=>{
+                item.addEventListener('click',(e)=>{
+                    if(e.target.nodeName==='A'){
+                        console.log(e.target.parentElement.dataset.date)
+                        window.location.href='/orders/date/'+e.target.parentElement.dataset.date
+                    }
+                })
+            })
+            
+            btnHandle.forEach((item)=>{
+                item.addEventListener('click',(e)=>{
+                    fetch(`${window.location.origin}/orders/accept/${item.dataset.madh}`)
+                    .then(res=>res.json())
+                    .then(res=>{
+                        console.log(res)
+                        const badgeEl=item.parentElement.parentElement.querySelector('.badge')
+                        badgeEl.classList.remove('badge-danger')
+                        badgeEl.classList.add('badge-success')
+                        badgeEl.innerText='Đã hoàn tất'
+                        item.remove()
+                    })
+                })
+            })
+            
+        })
+    </script>
+</body>
+
+</html>

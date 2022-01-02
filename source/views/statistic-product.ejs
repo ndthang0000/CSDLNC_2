@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+    <link rel="stylesheet" href="bower_components/chartist/dist/chartist.min.css">
+</head>
+
+<body>
+
+    <%- include('./partials/loader'); -%>
+    <div id="main-wrapper">
+        <%- include('./partials/header-sidebar'); -%>
+        <div class="content-body">
+            <div class="container-fluid">
+                <div class="row page-titles mx-0">
+                    <div class="col-sm-6">
+                        <div class="welcome-text">
+                            <h4>Top 20 sản phẩm bán chạy nhất</h4>
+                            <span class="ml-1">Từ năm 2015</span>
+                        </div>
+                    </div>
+                    <div class="basic-dropdown col-sm-4">
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                Chọn năm
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/statistic/product">Tất cả các năm</a>
+                                <a class="dropdown-item" href="?year=2022">Năm 2022</a>
+                                <a class="dropdown-item" href="?year=2021">Năm 2021</a>
+                                <a class="dropdown-item" href="?year=2020">Năm 2020</a>
+                                <a class="dropdown-item" href="?year=2019">Năm 2019</a>
+                                <a class="dropdown-item" href="?year=2018">Năm 2018</a>
+                                <a class="dropdown-item" href="?year=2017">Năm 2017</a>
+                                <a class="dropdown-item" href="?year=2016">Năm 2016</a>
+                                <a class="dropdown-item" href="?year=2015">Năm 2015</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="">Statistic</a></li>
+                            <li class="breadcrumb-item active"><a href="">Product</a></li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 style="color: blue;"><%= year %></h3>
+                            </div>
+                            <div class="card-body">
+                                <div id="flotBar1" class="flot-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Basic</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-responsive-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Mã sản phẩm</th>
+                                                <th>Ảnh mô tả</th>
+                                                <th>Tên Sản phẩm</th>
+                                                <th>Số lượng đã bán</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% data.forEach((item,index)=>{ %>
+                                                <tr>
+                                                    <th><%=index+1%></th>
+                                                    <td><%=item.MASP%></td>
+                                                    <td><img src="<%= item.IMAGEURL %>" style="width: 80px;" alt=""></td>
+                                                    <td><%=item.TENSP%></td>
+                                                    <td><span class="badge badge-primary"><%=formatNumber(item.SOLUONG)%></span>
+                                                    </td>
+                                                </tr>
+                                            <% })%>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    
+    
+    </div>
+    
+    <%- include('./partials/script'); -%>
+    <script src="bower_components/chartist/dist/chartist.min.js"></script>
+    <script>
+        var data =<%- JSON.stringify(data) -%>;
+        let labels=data.map(item=>item.MASP.trim())
+        let series=data.map(item=>item.SOLUONG)
+        document.addEventListener('DOMContentLoaded',()=>{
+            var data = {
+                labels: labels,
+                series: [
+                    series
+                ]
+            };
+
+            var options = {
+                high: series[0],
+                low: 0,
+                
+            };
+
+            new Chartist.Bar('.flot-chart', data, options);
+        })
+    </script>
+</body>
+
+</html>

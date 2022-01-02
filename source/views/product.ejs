@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body>
+
+    <%- include('./partials/loader'); -%>
+    <div id="main-wrapper">
+        <%- include('./partials/header-sidebar'); -%>
+        <div class="content-body">
+            <div class="container-fluid">
+                <div class="row page-titles mx-0">
+                    <div class="col-sm-8 p-md-0">
+                        <div class="welcome-text" style="display: flex;justify-content: space-between; flex: 5 !important;align-items: center;font-size: 18px;">
+                            <li><a style="color:#555;" href="/product" class="<% if(active==-1){%>
+                                li-active
+                            <% } %>">
+                            Tất cả sản phẩm</a></li>
+                            <% category.forEach(item=>{ %>
+                                <li><a style="color:#555;" href="/product/<%=item.MALOAI%>"
+                                    class="<% if(tittle===item.TENLOAI) { %>
+                                        li-active<% } %>"
+                                    ><%=item.TENLOAI%></a></li>
+                            <% }) %>
+                        </div>
+                    </div>
+                    
+                </div>
+                <!-- row -->
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title"><%=tittle%></h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <h2>Tổng số sản phẩm : <%= quantityProduct%> sản phẩm</h2>
+                                    <table class="table table-responsive-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Mã sản phẩm</th>
+                                                <th>Hình ảnh</th>
+                                                <th style="width: 100px !important;overflow: hidden;">Tên sản phẩm</th>
+                                                <th>Giá bán</th>
+                                                <th>Số lượng tồn</th>
+                                                <th>Loại Sản phẩm</th>
+                                                <th>Ngày sản xuất</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% allOrder.forEach((item,index)=>{ %>
+                                                <tr>
+                                                    <td><%= index+1 %></td>
+                                                    <td><%= item.MASP %></td>
+                                                    <td><a href="/product/detail/<%= item.MASP %>"><img src="<%= item.IMAGEURL %>" style="width: 50px;" alt=""></a></td>
+                                                    <td style="width: 200px !important;" class="truncate"><%= item.TENSP %></td>
+                                                    <td style="color: red;"><%= formatNumber(item.GIABAN) %>đ</td>
+                                                    <td><%= item.SOLUONGTON %> </span>
+                                                    </td>
+                                                    <td class="color-primary"><%= item.TENLOAI %></td>
+                                                    <td><%= randomDate() %></td>
+                                                </tr>
+                                            <% }) %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex;justify-content: center;margin-bottom: 50px;">
+                    <li class="page-item page-indicator" style="margin-right: 5px;">
+                        <a class="page-link" href="?page=<%= currentPage===1?1:currentPage-1 %>">
+                            <i class="icon-arrow-left"></i></a>
+                    </li>
+                    <% if(currentPage>4){ %>
+                        <% for(let i=currentPage-3;i<currentPage+4&&i<quantityProduct/10;i++) { %>
+                            <li ><a class="item-pagination <% if(i==currentPage){ %> active <% } %>" href="?page=<%=i%>"><%=i%></a></li>
+                        <% } %>
+                    <% } else { %>
+                        <% for(let i=1;i<6;i++){ %>
+                            <li ><a class="item-pagination <% if(i==currentPage){ %> active <% } %>" href="?page=<%=i%>"><%=i%></a></li>
+                        <% } %>
+                    <%}%>
+                    <li class="page-item page-indicator" style="margin-left: 5px;">
+                        <a class="page-link" href="?page=<%= currentPage===quantityProduct/10+1?quantityProduct/10+1:currentPage+1 %>">
+                            <i class="icon-arrow-right"></i></a>
+                    </li>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('./partials/script'); -%>
+</body>
+
+</html>
